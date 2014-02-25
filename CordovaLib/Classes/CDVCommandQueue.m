@@ -193,8 +193,10 @@ static const double MAX_EXECUTION_TIME = .008; // Half of a 60fps frame.
     NSString* methodName = [NSString stringWithFormat:@"%@:", command.methodName];
     SEL normalSelector = NSSelectorFromString(methodName);
     if ([obj respondsToSelector:normalSelector]) {
-        // [obj performSelector:normalSelector withObject:command];
-        objc_msgSend(obj, normalSelector, command);
+        // use this because it works on arm64 too...
+        [obj performSelector:normalSelector withObject:command];
+        // ...instead of the line below
+        // objc_msgSend(obj, normalSelector, command);
     } else {
         // There's no method to call, so throw an error.
         NSLog(@"ERROR: Method '%@' not defined in Plugin '%@'", methodName, command.className);
