@@ -194,7 +194,8 @@ static const double MAX_EXECUTION_TIME = .008; // Half of a 60fps frame.
     SEL normalSelector = NSSelectorFromString(methodName);
     if ([obj respondsToSelector:normalSelector]) {
         // use this because it works on arm64 too...
-        [obj performSelector:normalSelector withObject:command];
+        void * (*action)(id, SEL, id) = (void * (*)(id, SEL, id)) objc_msgSend;
+        action(self, normalSelector, command);
         // ...instead of the line below
         // objc_msgSend(obj, normalSelector, command);
     } else {
